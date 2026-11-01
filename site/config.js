@@ -1,47 +1,59 @@
-name: Construire et publier
+// ============================================================
+//  CONFIGURATION DU SITE — le seul fichier à modifier au départ
+//  (lu à la fois par le navigateur et par le script de build)
+// ============================================================
+export default {
+  nom: "Bibliothèque Libre",
+  slogan: "Les classiques du domaine public, gratuits et à portée de clic.",
 
-on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: "17 3 * * 1"
-  workflow_dispatch: {}
+  // Adresse publique du site, SANS slash final.
+  // GitHub Pages : https://VOTRE-PSEUDO.github.io/NOM-DU-DEPOT
+  urlSite: "https://VOTRE-PSEUDO.github.io/bibliotheque-libre",
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contact: "contact@exemple.fr",
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  // ---------- Catalogue automatique (Project Gutenberg via Gutendex) ----------
+  catalogue: {
+    langues: ["fr", "en"],   // codes ISO : fr, en, es, de, it, pt…
+    maxParLangue: 5000,      // 5 000 × 2 langues ≈ 10 000 livres
+    enrichir: 300,           // nb de livres (les plus populaires) complétés via Open Library (année, ISBN)
+    cacheJours: 6            // on ne re-télécharge le catalogue qu'une fois par semaine
+  },
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - uses: actions/cache@v4
-        with:
-          path: data/.cache
-          key: catalogue-${{ github.run_id }}
-          restore-keys: catalogue-
-      - name: Construire le site
-        run: node scripts/build.mjs
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+  // ---------- Affiliation ----------
+  // Passez "actif" à true après inscription et remplacement des VOTRE_… par vos identifiants.
+  // {q} = recherche (ISBN si connu, sinon titre + auteur) ; {url} = la page "cible" encodée.
+  affiliation: {
+    programmes: [
+      {
+        nom: "Amazon",
+        actif: false,
+        modele: "https://www.amazon.fr/s?k={q}&i=stripbooks&tag=VOTRE-TAG-21"
+      },
+      {
+        nom: "Fnac",
+        actif: false,
+        cible: "https://www.fnac.com/SearchResult/ResultList.aspx?Search={q}",
+        modele: "https://www.awin1.com/cread.php?awinmid=ID_MARCHAND_FNAC&awinaffid=VOTRE_ID_AWIN&ued={url}"
+      },
+      {
+        nom: "Kobo",
+        actif: false,
+        cible: "https://www.kobo.com/fr/fr/search?query={q}",
+        modele: "https://click.linksynergy.com/deeplink?id=VOTRE_ID_RAKUTEN&mid=ID_MARCHAND_KOBO&murl={url}"
+      }
+    ]
+  },
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+  // ---------- Dépôt gratuit par les auteurs (Supabase) ----------
+  // Laissez vide pour désactiver. La clé "anon" est publique par conception :
+  // la sécurité repose sur les règles RLS de supabase/schema.sql.
+  supabase: {
+    url: "",       // ex : https://abcdefgh.supabase.co
+    anonKey: ""
+  },
+
+  // ---------- Options ----------
+  newsletter: { buttondown: "" },   // votre identifiant Buttondown (gratuit) — vide = masqué
+  analytics: { goatcounter: "" }    // votre code GoatCounter (sans cookie) — vide = désactivé
+};

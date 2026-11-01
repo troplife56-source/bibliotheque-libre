@@ -1,5 +1,3 @@
-# Construit le site (catalogue + pages des livres) et le publie sur GitHub Pages.
-# Se lance : à chaque modification poussée sur "main", chaque lundi, ou à la main (onglet Actions → Run workflow).
 name: Construire et publier
 
 on:
@@ -24,21 +22,16 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      # Garde le catalogue téléchargé d'un build à l'autre (re-téléchargé une fois par semaine)
       - uses: actions/cache@v4
         with:
           path: data/.cache
           key: catalogue-${{ github.run_id }}
           restore-keys: catalogue-
-
       - name: Construire le site
         run: node scripts/build.mjs
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

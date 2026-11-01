@@ -8,7 +8,7 @@ export default {
 
   // Adresse publique du site, SANS slash final.
   // GitHub Pages : https://VOTRE-PSEUDO.github.io/NOM-DU-DEPOT
-  urlSite: "https://VOTRE-PSEUDO.github.io/bibliotheque-libre",
+  urlSite: "https://troplife56-source.github.io/bibliotheque-libre",
 
   contact: "contact@exemple.fr",
 

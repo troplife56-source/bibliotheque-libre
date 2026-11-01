@@ -23,6 +23,12 @@ const DEMO = !!env.DEMO;
 const LANGS = (env.LANGS ? env.LANGS.split(",") : cfg.catalogue.langues).map(s => s.trim());
 const MAX = Number(env.MAX_PAR_LANGUE || cfg.catalogue.maxParLangue);
 const ENRICH = Number(env.ENRICHIR ?? (DEMO ? 0 : cfg.catalogue.enrichir));
+const GUTENDEX = env.GUTENDEX || "https://gutendex.com";
+// Budget de téléchargement par build : au-delà, on publie avec ce qu'on a
+// et le build suivant reprend là où celui-ci s'est arrêté.
+const BUDGET_MIN = Number(env.BUDGET_MIN || 35);
+const DEADLINE = Date.now() + BUDGET_MIN * 60_000;
+const tempsRestant = () => DEADLINE - Date.now() > 0;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const log = (...a) => console.log("•", ...a);
 
@@ -33,7 +39,7 @@ async function readJSON(p, fallback) {
 async function fetchJSON(url, { tries = 4, headers = {} } = {}) {
   for (let i = 1; i <= tries; i++) {
     try {
-      const r = await fetch(url, { headers: { "User-Agent": "bibliotheque-libre-build", ...headers }, signal: AbortSignal.timeout(60_000) });
+      const r = await fetch(url, { headers: { "User-Agent": "bibliotheque-libre-build", ...headers }, signal: AbortSignal.timeout(45_000) });
       if (r.ok) return await r.json();
       if (r.status === 404) return null;
       throw new Error(`HTTP ${r.status}`);
@@ -75,27 +81,36 @@ async function loadGutendex() {
     const page = await readJSON(path.join(ROOT, "data", "exemple-gutendex.json"));
     return page.results.filter(g => g.media_type === "Text").map(fromGutendex);
   }
-  const file = path.join(CACHE, "gutendex.json");
-  if (!env.REFRESH && existsSync(file)) {
-    const age = (Date.now() - (await stat(file)).mtimeMs) / 864e5;
-    if (age < cfg.catalogue.cacheJours) { log(`Catalogue en cache (${age.toFixed(1)} j)`); return readJSON(file, []); }
+  // État sauvegardé après chaque page : un build interrompu reprend où il s'était arrêté.
+  const file = path.join(CACHE, "gutendex-etat.json");
+  const firstUrl = lang => `${GUTENDEX}/books/?languages=${lang}&copyright=false&mime_type=application%2Fepub`;
+  let st = await readJSON(file, null);
+  const fini = s => LANGS.every(l => s.langues[l]?.fini);
+  const age = st ? (Date.now() - st.debut) / 864e5 : Infinity;
+  if (!st || env.REFRESH || (fini(st) && age >= cfg.catalogue.cacheJours)) {
+    st = { debut: Date.now(), langues: {} };
+  } else if (fini(st)) {
+    log(`Catalogue en cache (${age.toFixed(1)} j)`);
   }
-  const books = [];
+  for (const lang of LANGS) st.langues[lang] ??= { next: firstUrl(lang), livres: [], fini: false };
+  await mkdir(CACHE, { recursive: true });
+
   for (const lang of LANGS) {
-    let url = `https://gutendex.com/books/?languages=${lang}&copyright=false&mime_type=application%2Fepub`;
-    let n = 0;
-    while (url && n < MAX) {
-      const data = await fetchJSON(url);
-      if (!data) break;
-      for (const g of data.results) if (g.media_type === "Text" && n < MAX) { books.push(fromGutendex(g)); n++; }
-      log(`Gutendex [${lang}] ${n}/${Math.min(MAX, data.count)}`);
-      url = data.next;
+    const L = st.langues[lang];
+    while (!L.fini && tempsRestant()) {
+      let data;
+      try { data = await fetchJSON(L.next); }
+      catch (e) { console.warn(`⚠ Gutendex indisponible (${e.message}) — on continue avec ce qu'on a.`); break; }
+      if (data) for (const g of data.results) if (g.media_type === "Text" && L.livres.length < MAX) L.livres.push(fromGutendex(g));
+      L.next = data?.next || null;
+      L.fini = !L.next || L.livres.length >= MAX;
+      log(`Gutendex [${lang}] ${L.livres.length}/${Math.min(MAX, data?.count ?? MAX)}`);
+      await writeFile(file, JSON.stringify(st));
       await sleep(250);
     }
   }
-  await mkdir(CACHE, { recursive: true });
-  await writeFile(file, JSON.stringify(books));
-  return books;
+  if (!fini(st)) log("⏸ Budget de temps atteint : publication partielle, la suite au prochain build.");
+  return LANGS.flatMap(l => st.langues[l].livres);
 }
 
 // ---------- 2. Open Library : année de première publication + ISBN ----------
@@ -106,7 +121,7 @@ async function enrich(books) {
   const cibles = [...books].sort((a, b) => b.p - a.p).slice(0, ENRICH);
   let faits = 0;
   for (const b of cibles) {
-    if (!(b.id in cache)) {
+    if (!(b.id in cache) && tempsRestant()) {
       const u = `https://openlibrary.org/search.json?title=${encodeURIComponent(b.t)}&author=${encodeURIComponent(b.a)}&fields=first_publish_year,isbn&limit=1`;
       try {
         const d = await fetchJSON(u, { tries: 2 });
@@ -150,6 +165,8 @@ function applyManual(books, manual) {
   const byId = new Map(books.map(b => [b.id, b]));
   for (const m of manual) {
     if (m.supprimer) { byId.delete(m.id); continue; }
+    // Correction d'un livre absent du catalogue (pas encore téléchargé) : on l'ignore
+    if (!byId.has(m.id) && !(m.t && m.a)) continue;
     const base = byId.get(m.id) || { p: 0, c: ["classiques"], l: "fr", liens: {} };
     byId.set(m.id, { ...base, ...m, liens: { ...base.liens, ...m.liens } });
   }

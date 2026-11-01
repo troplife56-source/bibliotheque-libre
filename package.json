@@ -1,0 +1,14 @@
+{
+  "name": "bibliotheque-libre",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Catalogue statique de livres du domaine public, avec dépôt gratuit pour les auteurs.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "demo": "DEMO=1 node scripts/build.mjs",
+    "refresh": "REFRESH=1 node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs 8080"
+  }
+}

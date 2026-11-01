@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Livre | {{NOM}}</title>
+<meta name="robots" content="noindex">
+<!--HEAD-->
+</head>
+<body>
+<!--HEADER-->
+<main id="contenu" class="wrap"><p class="empty">Chargement…</p></main>
+<!--FOOTER-->
+<script type="module">
+// Fiche dynamique d'un livre déposé et validé depuis le dernier build.
+// (Après le build suivant, le livre a sa propre page statique, indexée par Google.)
+import cfg from "./config.js";
+import { renderBookMain, depotToBook, supabaseActif } from "./assets/shared.js";
+const main = document.querySelector("main");
+const id = new URLSearchParams(location.search).get("depot");
+try {
+  if (!supabaseActif(cfg) || !id) throw new Error("introuvable");
+  const { supa } = await import("./assets/supa.js");
+  const { data, error } = await (await supa()).from("depots").select("*").eq("id", id).eq("status", "publie").maybeSingle();
+  if (error || !data) throw new Error("introuvable");
+  const b = depotToBook(data, cfg);
+  document.title = `${b.t} — ${b.a} | ${cfg.nom}`;
+  main.innerHTML = renderBookMain(b, cfg, "./"); // toutes les valeurs sont échappées par renderBookMain
+} catch {
+  main.innerHTML = '<p class="empty">Ce livre est introuvable ou n\'est plus disponible. <a href="./">Retour au catalogue</a></p>';
+}
+</script>
+</body>
+</html>

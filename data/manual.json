@@ -1,0 +1,22 @@
+[
+  {
+    "id": "gut-14155",
+    "y": 1857,
+    "resume": "Emma Bovary, épouse d'un médecin de campagne, s'étourdit de rêves romanesques pour fuir l'ennui de la province normande. Le chef-d'œuvre réaliste de Flaubert."
+  },
+  {
+    "id": "gut-17989",
+    "y": 1844,
+    "resume": "Trahi par ses rivaux et enfermé au château d'If, Edmond Dantès s'évade et prépare, sous le nom du comte de Monte-Cristo, une vengeance implacable."
+  },
+  {
+    "id": "gut-17489",
+    "y": 1862,
+    "resume": "Jean Valjean, ancien forçat, tente de se racheter tandis que l'inspecteur Javert le traque. Premier tome de la grande fresque sociale de Victor Hugo."
+  },
+  {
+    "id": "ia-exemple-gallica",
+    "supprimer": true,
+    "_aide": "Exemple : ajoutez un livre d'une autre source (Gallica, Internet Archive) avec un id unique, puis retirez \"supprimer\". Champs : t (titre), a (auteur), y (année), l (langue), c (catégories), resume, cv (couverture), liens { epub, pdf, html, source }."
+  }
+]

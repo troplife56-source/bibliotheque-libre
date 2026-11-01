@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{NOM}} — Classiques du domaine public à lire et télécharger gratuitement</title>
+<meta name="description" content="{{SLOGAN}} Des milliers de livres gratuits en EPUB : romans, poésie, théâtre, philosophie…">
+<link rel="canonical" href="{{URL}}/">
+<meta property="og:title" content="{{NOM}}">
+<meta property="og:description" content="{{SLOGAN}}">
+<!--HEAD-->
+</head>
+<body>
+<!--HEADER:catalogue-->
+
+<section class="hero wrap">
+  <h1>{{NOM}}</h1>
+  <p>{{SLOGAN}}</p>
+  <p class="stats" id="stats" aria-live="polite"></p>
+</section>
+
+<section class="collections wrap" id="collections" aria-labelledby="col-title">
+  <h2 id="col-title" class="section-title">Collections</h2>
+  <div class="col-row" id="col-row"></div>
+</section>
+
+<div class="controls" id="catalogue">
+  <div class="wrap">
+    <div class="search" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.42 1.4-5.39-5.38A8 8 0 1 1 10 2m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"/></svg>
+      <input id="q" type="search" placeholder="Titre, auteur, thème… (ex : hugo, misérables)" autocomplete="off" enterkeyhint="search" aria-label="Rechercher un livre">
+      <kbd aria-hidden="true">/</kbd>
+    </div>
+    <div class="filters">
+      <select id="cat" aria-label="Catégorie"><option value="">Toutes les catégories</option></select>
+      <select id="lang" aria-label="Langue"><option value="">Toutes les langues</option></select>
+      <select id="sort" aria-label="Trier">
+        <option value="pertinence">Les plus lus</option>
+        <option value="titre">Titre A→Z</option>
+        <option value="auteur">Auteur A→Z</option>
+        <option value="annee">Plus anciens</option>
+      </select>
+      <button type="button" class="chip" id="reset" hidden>Effacer les filtres</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <p class="active-col" id="active-col" hidden></p>
+  </div>
+</div>
+
+<main id="contenu" class="wrap">
+  <ul class="grid" id="grid" aria-label="Résultats"></ul>
+  <p class="empty" id="empty" hidden>Aucun livre ne correspond à votre recherche.</p>
+  <div class="more"><button type="button" class="btn btn-2" id="more" hidden>Afficher plus de livres</button></div>
+</main>
+
+<!--FOOTER-->
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

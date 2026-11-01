@@ -1,0 +1,60 @@
+[
+  {
+    "slug": "selection",
+    "titre": "Sélection de la rédaction",
+    "description": "Nos incontournables pour (re)découvrir les grands classiques.",
+    "ids": ["gut-14155", "gut-17989", "gut-17489", "gut-4650", "gut-1342", "gut-84"]
+  },
+  {
+    "slug": "plus-lus",
+    "titre": "Les plus téléchargés en français",
+    "description": "Les livres français les plus lus sur Project Gutenberg.",
+    "filtre": { "langue": "fr" },
+    "tri": "popularite",
+    "limite": 60
+  },
+  {
+    "slug": "poesie-francaise",
+    "titre": "Poésie française",
+    "description": "De Ronsard à Rimbaud, les vers qui ont marqué la langue.",
+    "filtre": { "categorie": "poesie", "langue": "fr" }
+  },
+  {
+    "slug": "grandes-aventures",
+    "titre": "Grandes aventures",
+    "description": "Pirates, explorateurs et voyages extraordinaires.",
+    "filtre": { "categorie": "aventure" }
+  },
+  {
+    "slug": "frissons",
+    "titre": "Frissons gothiques",
+    "description": "Fantômes, vampires et nuits d'orage.",
+    "filtre": { "categorie": "horreur" }
+  },
+  {
+    "slug": "enquetes",
+    "titre": "Enquêtes et mystères",
+    "description": "Les ancêtres du polar moderne.",
+    "filtre": { "categorie": "policier" }
+  },
+  {
+    "slug": "jeunesse",
+    "titre": "Pour les jeunes lecteurs",
+    "description": "Contes, fables et romans à lire dès 8 ans.",
+    "filtre": { "categorie": "jeunesse" }
+  },
+  {
+    "slug": "english-classics",
+    "titre": "English classics",
+    "description": "The most downloaded books in English.",
+    "filtre": { "langue": "en" },
+    "tri": "popularite",
+    "limite": 60
+  },
+  {
+    "slug": "auteurs-independants",
+    "titre": "Auteurs indépendants",
+    "description": "Des livres déposés gratuitement par leurs auteurs.",
+    "filtre": { "depot": true }
+  }
+]

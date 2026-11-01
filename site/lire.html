@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Liseuse | {{NOM}}</title>
+<meta name="robots" content="noindex">
+<!--HEAD-->
+</head>
+<body class="reader-body">
+<div class="reader-bar">
+  <a class="icon-btn" id="back" href="./" aria-label="Retour">←</a>
+  <h1 id="titre">Chargement…</h1>
+  <select id="toc" aria-label="Table des matières"><option>Sommaire</option></select>
+  <button class="icon-btn" id="smaller" type="button" aria-label="Réduire le texte">A−</button>
+  <button class="icon-btn" id="bigger" type="button" aria-label="Agrandir le texte">A+</button>
+</div>
+<div id="viewer" aria-live="polite"><div class="reader-msg" id="msg">Ouverture du livre…</div></div>
+<div class="reader-nav">
+  <button class="icon-btn" id="prev" type="button" aria-label="Page précédente">‹ Précédent</button>
+  <span id="pos"></span>
+  <button class="icon-btn" id="next" type="button" aria-label="Page suivante">Suivant ›</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/epub.js/0.3.93/epub.min.js"></script>
+<script type="module" src="assets/lire.js"></script>
+<script type="module" src="assets/common.js"></script>
+</body>
+</html>

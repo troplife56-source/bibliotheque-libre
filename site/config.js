@@ -55,5 +55,5 @@ export default {
 
   // ---------- Options ----------
   newsletter: { buttondown: "" },   // votre identifiant Buttondown (gratuit) — vide = masqué
-  analytics: { goatcounter: "" }    // votre code GoatCounter (sans cookie) — vide = désactivé
+ analytics: { goatcounter: "", google: "G-YTE41W9BXG" } // votre code GoatCounter (sans cookie) — vide = désactivé
 };

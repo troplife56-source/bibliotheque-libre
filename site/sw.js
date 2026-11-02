@@ -1,6 +1,6 @@
 // Service worker : le site reste consultable hors connexion.
 // Incrémentez VERSION à chaque modification des fichiers du site.
-const VERSION = "bl-v1";
+const VERSION = "bl-v2";
 const SHELL = ["./", "./index.html", "./assets/style.css", "./assets/app.js", "./assets/shared.js",
   "./assets/common.js", "./config.js", "./icon.svg", "./manifest.webmanifest", "./data/collections.json"];
 

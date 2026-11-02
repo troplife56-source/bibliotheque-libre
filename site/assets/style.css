@@ -147,4 +147,12 @@ mark{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 1px
 .reader-nav{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-top:1px solid var(--border);background:var(--surface);font-size:.85rem;color:var(--muted)}
 .reader-msg{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;gap:12px}
 
+/* Bandeau cookies (Refuser et Accepter ont le même poids visuel, comme l'exige la CNIL) */
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:560px;margin:0 auto;padding:16px;
+  background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:0 10px 40px rgba(0,0,0,.25);font-size:.92rem}
+.cookie-banner p{margin:0 0 12px}
+.cookie-banner div{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.cookie-banner .btn{flex:1;min-width:120px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}

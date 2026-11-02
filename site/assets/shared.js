@@ -129,7 +129,8 @@ export function headCommon(root, cfg) {
 <link rel="apple-touch-icon" href="${root}icon-192.png">
 <link rel="manifest" href="${root}manifest.webmanifest">
 <link rel="stylesheet" href="${root}assets/style.css">
-<link rel="preconnect" href="https://www.gutenberg.org">${cfg.analytics?.goatcounter ? `
+<link rel="preconnect" href="https://www.gutenberg.org">${cfg.analytics?.google ? `
+<meta name="ga-id" content="${esc(cfg.analytics.google)}">` : ""}${cfg.analytics?.goatcounter ? `
 <script data-goatcounter="https://${esc(cfg.analytics.goatcounter)}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>` : ""}`;
 }
 
@@ -155,7 +156,7 @@ export function siteFooter(root, cfg) {
   return `<footer class="site-footer"><div class="wrap">${nl}
   <p>${esc(cfg.nom)} référence des œuvres du domaine public hébergées par Project Gutenberg, Gallica et Internet Archive, ainsi que des livres déposés par leurs auteurs.</p>
   ${affiliatesActifs(cfg).length ? `<p class="small">Certains liens d'achat sont des liens affiliés : le site perçoit une petite commission, sans surcoût pour vous.</p>` : ""}
-  <p class="small"><a href="${root}mentions.html">Mentions légales & confidentialité</a> · <a href="${root}mentions.html#droits">Signaler un contenu</a></p>
+  <p class="small"><a href="${root}mentions.html">Mentions légales & confidentialité</a> · <a href="${root}mentions.html#droits">Signaler un contenu</a>${cfg.analytics?.google ? ` · <a href="${root}mentions.html#cookies" data-cookies>Gérer les cookies</a>` : ""}</p>
 </div></footer>
 <script type="module" src="${root}assets/common.js"></script>`;
 }
